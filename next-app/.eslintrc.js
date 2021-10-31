@@ -49,6 +49,8 @@ module.exports = {
         "react/jsx-indent": "off",
         "react/jsx-indent-props": "off",
         "no-tabs": "off",
+        "no-console": "off",
+        "consistent-return": "off",
         "react/jsx-filename-extension": [
             1,
             { extensions: [".js", ".jsx", ".tsx"] }, //jsx사용가능한 확장자 설정
