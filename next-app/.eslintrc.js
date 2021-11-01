@@ -4,7 +4,6 @@ module.exports = {
         es2021: true
     },
     extends: [
-        "plugin:react/recommended",
         "airbnb"
     ],
     parserOptions: {
@@ -51,6 +50,9 @@ module.exports = {
         "no-tabs": "off",
         "no-console": "off",
         "consistent-return": "off",
+        "import/no-extraneous-dependencies": "off",
+        curly: "off",
+        "nonblock-statement-body-position": "off",
         "react/jsx-filename-extension": [
             1,
             { extensions: [".js", ".jsx", ".tsx"] }, //jsx사용가능한 확장자 설정
