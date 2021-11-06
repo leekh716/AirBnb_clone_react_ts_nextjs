@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import palette from "../styles/palette";
 import { TodoType } from "../types/todo";
@@ -129,12 +129,14 @@ interface IProps {
 }
 
 const TodoList: React.FC<IProps> = ({ todos }) => {
+	const [localTodos, setLocalTodos] = useState(todos);
+
 	type ObjectIndexType = {
 		[key: string]: number | undefined; // key : value 각각이네..
 	};
 	const todoColorNums = useMemo(() => {
 		const colors: ObjectIndexType = {};
-		todos.forEach((todo) => {
+		localTodos.forEach((todo) => {
 			const value = colors[todo.color];
 			if (!value) {
 				colors[todo.color] = 1;
@@ -144,12 +146,18 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
 			}
 		});
 		return colors;
-	}, [todos]);
+	}, [localTodos]);
 
 	const checkTodo = async (id: number) => {
 		try {
 			await checkTodoAPI(id);
-			console.log("체크됨");
+			const newTodos = localTodos.map((todo) => {
+				if (todo.id === id) {
+					return { ...todo, checked: !todo.checked };
+				}
+				return todo;
+			});
+			setLocalTodos(newTodos);
 		} catch (e) {
 			console.log(e);
 		}
@@ -159,7 +167,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
 		<Container>
 			<div className="todo-list-header">
 				<p className="todo-list-last-todo">
-					남은 To-Do<span>{todos.length}개</span>
+					남은 To-Do<span>{localTodos.length}개</span>
 				</p>
 				<div className="todo-list-header-colors">
 					{Object.keys(todoColorNums).map((color, index) => (
@@ -171,7 +179,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
 				</div>
 			</div>
 			<ul className="todo-list">
-				{todos.map((todo) => (
+				{localTodos.map((todo) => (
 					<li className="todo-item" key={todo.id}>
 						<div className="todo-left-side">
 							<div className={`todo-color-block bg-${todo.color}`} />
