@@ -56,6 +56,7 @@ module.exports = {
 			curly: "off",
 			"nonblock-statement-body-position": "off",
 			"brace-style": "off",
+			"no-alert": "off",
 			"react/jsx-filename-extension": [
 					1,
 					{ extensions: [".js", ".jsx", ".tsx"] }, //jsx사용가능한 확장자 설정
