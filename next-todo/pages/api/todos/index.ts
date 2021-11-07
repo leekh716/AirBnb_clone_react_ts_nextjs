@@ -37,8 +37,4 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 		res.statusCode = 200;
 		res.end();
 	}
-
-	res.statusCode = 405;
-	console.log(res.statusCode);
-	return res.end();
 };
