@@ -31,11 +31,11 @@ const useModal = () => {
 		setModalOpened(false);
 	};
 
-	interface Iprops {
+	interface IProps {
 		children: React.ReactNode;
 	}
 
-	const ModalPortal: React.FC<Iprops> = ({ children }) => {
+	const ModalPortal: React.FC<IProps> = ({ children }) => {
 		const ref = useRef<Element | null>();
 		const [mounted, setMounted] = useState(false);
 
