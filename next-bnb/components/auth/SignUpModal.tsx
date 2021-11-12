@@ -10,8 +10,9 @@ import Selector from "../common/Selector";
 import { dayList, monthList, yearList } from "../../lib/staticData";
 import palette from "../../styles/palette";
 import Button from "../common/Button";
+import { signUpAPI } from "../../lib/api/auth";
 
-const Container = styled.div`
+const Container = styled.form`
 	width: 568px;
 	height: 614px;
 	padding: 32px;
@@ -99,8 +100,25 @@ const SignUpModal: React.FC = () => {
 		setBirthYear(event.target.value);
 	}
 
+	const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+
+		try {
+			const signUpBody = {
+				email,
+				lastname,
+				firstname,
+				password,
+				birthday: new Date(`${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`).toISOString(),
+			};
+			await signUpAPI(signUpBody);
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
 	return (
-		<Container>
+		<Container onSubmit={onSubmitSignUp}>
 			<CloseXIcon className="modal-close-x-icon" />
 			<div className="input-wrapper">
 				<Input placeholder="이메일 주소" type="email" icon={<MailIcon />} name="email" value={email} onChange={onChangeEmail} />
