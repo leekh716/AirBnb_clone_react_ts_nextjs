@@ -2,9 +2,11 @@ import { HYDRATE, createWrapper } from "next-redux-wrapper";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector as useReduxSelector } from "react-redux";
 import user from "./user";
+import common from "./common";
 
 const rootReducer = combineReducers({
 	user: user.reducer,
+	common: common.reducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
