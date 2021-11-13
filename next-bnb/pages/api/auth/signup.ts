@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 		const userExist = Data.user.exist({ email });
 		if (userExist) {
 			res.statusCode = 409;
-			res.send("이미 가입된 이메일입니다.");
+			return res.send("이미 가입된 이메일입니다.");
 		}
 
 		const hashedPassword = bcrypt.hashSync(password, 8);
@@ -40,8 +40,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 		Data.user.write([...users, newUser]);
 
 		const token = jwt.sign(String(newUser.id), process.env.JWT_SECRET!);
-		res.setHeader("set-Cookie", `access_token=${token}; path=/; expires=${new Date(Date.now() + 60 * 60 * 24 * 1000 * 3)}; httponly`);
-		return res.end();
+		res.setHeader("set-Cookie", `access_token=${token}; path=/; expires=${new Date(Date.now() + 60 * 60 * 24 * 1000 * 3).toUTCString()}; httponly`);
+
+		const newUserWithoutPassword: Partial<Pick<StoredUserType, "password">> = newUser;
+
+		delete newUserWithoutPassword.password;
+		res.statusCode = 200;
+		return res.send(newUser);
 	}
 	res.statusCode = 405;
 	return res.end();
