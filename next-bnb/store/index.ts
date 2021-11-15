@@ -1,4 +1,4 @@
-import { HYDRATE, createWrapper } from "next-redux-wrapper";
+import { HYDRATE, createWrapper, MakeStore } from "next-redux-wrapper";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector as useReduxSelector } from "react-redux";
 import user from "./user";
@@ -30,7 +30,7 @@ const reducer = (state: any, action: any) => {
 
 export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
 
-const initStore = () => {
+const initStore: MakeStore = () => {
 	const store = configureStore({
 		reducer,
 		devTools: true,

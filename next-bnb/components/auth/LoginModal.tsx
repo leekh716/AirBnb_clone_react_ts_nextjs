@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CloseXIcon from "../../public/static/svg/modal/modal_colose_x_icon.svg";
 import MailIcon from "../../public/static/svg/auth/mail.svg";
@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { authActions } from "../../store/auth";
 import { loginAPI } from "../../lib/api/auth";
 import useValidateMode from "../../hooks/useValidateMode";
+import { userActions } from "../../store/user";
 
 const Container = styled.form`
 	width: 568px;
@@ -85,12 +86,20 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
 
 			try {
 				const { data } = await loginAPI(loginBody);
+				dispatch(userActions.setLoggedUser(data));
+				closeModal();
 				console.log(data);
 			} catch (e) {
 				console.log(e);
 			}
 		}
-	}
+	};
+
+	useEffect(() => {
+		return () => {
+			setValidateMode(false);
+		};
+	}, []);
 
 	return (
 		<Container onSubmit={onSubmitLogin}>
