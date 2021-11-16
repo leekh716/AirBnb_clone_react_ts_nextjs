@@ -81,4 +81,4 @@ const Input: React.FC<IProps> = ({ icon, isValid = false, useValidation = true, 
 	);
 };
 
-export default Input;
+export default React.memo(Input);

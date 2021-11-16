@@ -187,6 +187,10 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
 		dispatch(authActions.setAuthMode("login"));
 	};
 
+	const disabledMonths = ["월"];
+	const disabledDays = ["일"];
+	const disabledYears = ["년"];
+
 	return (
 		<Container onSubmit={onSubmitSignUp}>
 			<CloseXIcon className="modal-close-x-icon" onClick={closeModal} />
@@ -238,13 +242,13 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
 			</p>
 			<div className="sign-up-modal-birthday-selectors">
 				<div className="sign-up-modal-birthday-month-selector">
-					<Selector options={monthList} disabledOptions={["월"]} defaultValue="월" value={birthMonth} onChange={onChangeBirthMonth} isValid={!!birthMonth} />
+					<Selector options={monthList} disabledOptions={disabledMonths} defaultValue="월" value={birthMonth} onChange={onChangeBirthMonth} isValid={!!birthMonth} />
 				</div>
 				<div className="sign-up-modal-birthday-day-selector">
-					<Selector options={dayList} disabledOptions={["일"]} defaultValue="일" value={birthDay} onChange={onChangeBirthDay} isValid={!!birthDay} />
+					<Selector options={dayList} disabledOptions={disabledDays} defaultValue="일" value={birthDay} onChange={onChangeBirthDay} isValid={!!birthDay} />
 				</div>
 				<div className="sign-up-modal-birthday-year-selector">
-					<Selector options={yearList} disabledOptions={["년"]} defaultValue="년" value={birthYear} onChange={onChangeBirthYear} isValid={!!birthYear} />
+					<Selector options={yearList} disabledOptions={disabledYears} defaultValue="년" value={birthYear} onChange={onChangeBirthYear} isValid={!!birthYear} />
 				</div>
 			</div>
 			<div className="sign-up-modal-submit-button-wrapper">
