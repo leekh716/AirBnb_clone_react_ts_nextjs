@@ -12,10 +12,10 @@ const globalStyle = css`
 		color: ${palette.black};
 		/* line-height: 1.2; */
 	}
-	/* a {
+	a {
 		text-decoration: none;
 		color: ${palette.black};
-	} */
+	}
 `;
 
 const GlobalStyle = createGlobalStyle`
