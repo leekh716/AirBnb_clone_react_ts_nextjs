@@ -1,7 +1,11 @@
-import { readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { StoredUserType } from "../../types/user";
 
 const getList = () => {
+  if (!existsSync("data/users.json")) {
+    mkdirSync("data");
+    writeFileSync("data/users.json", "[]", { flag: "wx" });
+  }
   const usersBuffer = readFileSync("data/users.json");
   const usersString = usersBuffer.toString();
   if (!usersString) {
