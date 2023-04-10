@@ -7,6 +7,7 @@ module.exports = {
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
+    JSX: true,
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -60,6 +61,7 @@ module.exports = {
         tsx: "never",
       }, //import 시 확장자명은 사용하지 않는다.
     ],
+    "react/require-default-props": "off",
   },
   settings: {
     "import/resolver": {
