@@ -10,6 +10,7 @@ import palette from "../../styles/palette";
 import Selector from "../common/Selector";
 import { dayList, monthList, yearList } from "../../lib/staticData";
 import Button from "../common/Button";
+import { signUpAPI } from "../../lib/api/auth";
 
 const Container = styled.form`
   width: 568px;
@@ -105,12 +106,34 @@ function SignUpModal({ closeModal }: IProps) {
     setBirthYear(event.target.value);
   };
 
+  const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const signUpBody = {
+        email,
+        lastname,
+        firstname,
+        password,
+        birthday: new Date(
+          `${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`
+        ).toISOString(),
+      };
+      const { data } = await signUpAPI(signUpBody);
+
+      closeModal();
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
+  };
+
   const disabledMonths = ["월"];
   const disabledDays = ["일"];
   const disabledYears = ["년"];
 
   return (
-    <Container>
+    <Container onSubmit={onSubmitSignUp}>
       <CloseXIcon className="modal-close-x-icon" onClick={closeModal} />
       <div className="input-wrapper">
         <Input
