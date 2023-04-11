@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import React from "react";
 import palette from "../../styles/palette";
+import { useSelector } from "../../store";
 
 interface InputContainerProps {
   iconExist: boolean;
@@ -65,19 +66,19 @@ const Container = styled.div<InputContainerProps>`
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: JSX.Element;
   isValid?: boolean;
-  validateMode?: boolean;
   useValidation?: boolean;
   errorMessage?: string;
 }
 
 export default function Input({
   icon,
-  validateMode = false,
   isValid = false,
   useValidation = true,
   errorMessage,
   ...props
 }: IProps) {
+  const { validateMode } = useSelector((state) => state.common);
+
   return (
     <Container
       iconExist={!!icon}
