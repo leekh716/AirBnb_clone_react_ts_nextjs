@@ -1,9 +1,15 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import palette from "../../styles/palette";
+import { useSelector } from "../../store";
 // import WarningIcon from "../../public//static/svg/common/warning.svg";
 
-const Container = styled.div`
+interface SelectorContainerProps {
+  isValid: boolean;
+  validateMode: boolean;
+}
+
+const Container = styled.div<SelectorContainerProps>`
   width: 100%;
   height: 46px;
 
@@ -25,21 +31,36 @@ const Container = styled.div`
       border-color: ${palette.dark_cyan};
     }
   }
+
+  ${({ isValid, validateMode }) =>
+    validateMode &&
+    css`
+      select {
+        border-color: ${isValid ? palette.dark_cyan : palette.tawny};
+        !important
+
+        background-color: ${isValid ? "white" : palette.snow};
+      }
+    `}
 `;
 
 interface IProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options?: string[];
   disabledOptions?: string[];
   value?: string;
+  isValid?: boolean;
 }
 
 export default function Selector({
   options = [],
   disabledOptions = [],
+  isValid = true,
   ...props
 }: IProps) {
+  const { validateMode } = useSelector((state) => state.common);
+
   return (
-    <Container>
+    <Container isValid={!!isValid} validateMode={validateMode}>
       <select {...props}>
         {disabledOptions.map((option, i) => (
           <option key={i} value={option} disabled>

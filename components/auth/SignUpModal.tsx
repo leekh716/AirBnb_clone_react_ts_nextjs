@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import CloseXIcon from "../../public/static/svg/modal/modal_colose_x_icon.svg";
 import MailIcon from "../../public/static/svg/auth/mail.svg";
@@ -69,6 +69,11 @@ const Container = styled.form`
     padding-bottom: 16px;
     border-bottom: 1px solid ${palette.gray_eb};
   }
+  .sign-up-modal-set-login {
+    color: ${palette.dark_cyan};
+    margin-left: 8px;
+    cursor: pointer;
+  }
 `;
 
 interface IProps {
@@ -114,6 +119,39 @@ function SignUpModal({ closeModal }: IProps) {
     [password]
   );
 
+  const validateSignupForm = useCallback(() => {
+    if (
+      !email ||
+      !lastname ||
+      !firstname ||
+      !password ||
+      !birthYear ||
+      !birthMonth ||
+      !birthDay
+    ) {
+      return false;
+    }
+    if (
+      !isPasswordOverMinLength ||
+      isPasswordHasNameOrEmail ||
+      isPasswordHasNumberOrSymbol
+    ) {
+      return false;
+    }
+    return true;
+  }, [
+    email,
+    lastname,
+    firstname,
+    password,
+    birthYear,
+    birthMonth,
+    birthDay,
+    isPasswordOverMinLength,
+    isPasswordHasNameOrEmail,
+    isPasswordHasNumberOrSymbol,
+  ]);
+
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -147,41 +185,37 @@ function SignUpModal({ closeModal }: IProps) {
 
     setValidateMode(true);
 
-    if (
-      !email ||
-      !lastname ||
-      !firstname ||
-      !password ||
-      !birthYear ||
-      !birthMonth ||
-      !birthDay
-    ) {
-      return undefined;
-    }
+    if (validateSignupForm()) {
+      try {
+        const signUpBody = {
+          email,
+          lastname,
+          firstname,
+          password,
+          birthday: new Date(
+            `${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`
+          ).toISOString(),
+        };
+        const { data } = await signUpAPI(signUpBody);
 
-    try {
-      const signUpBody = {
-        email,
-        lastname,
-        firstname,
-        password,
-        birthday: new Date(
-          `${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`
-        ).toISOString(),
-      };
-      const { data } = await signUpAPI(signUpBody);
-
-      dispatch(userActions.setLoggedUser(data));
-      closeModal();
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
+        dispatch(userActions.setLoggedUser(data));
+        closeModal();
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
     }
   };
 
   const disabledMonths = ["월"];
   const disabledDays = ["일"];
   const disabledYears = ["년"];
+
+  useEffect(() => {
+    return () => {
+      setValidateMode(false);
+    };
+  }, []);
 
   return (
     <Container onSubmit={onSubmitSignUp}>
@@ -273,6 +307,7 @@ function SignUpModal({ closeModal }: IProps) {
             defaultValue="월"
             value={birthMonth}
             onChange={onChangeBirthMonth}
+            isValid={!!birthMonth}
           />
         </div>
         <div className="sign-up-modal-birthday-day-selector">
@@ -282,6 +317,7 @@ function SignUpModal({ closeModal }: IProps) {
             defaultValue="일"
             value={birthDay}
             onChange={onChangeBirthDay}
+            isValid={!!birthDay}
           />
         </div>
         <div className="sign-up-modal-birthday-year-selector">
@@ -291,12 +327,23 @@ function SignUpModal({ closeModal }: IProps) {
             defaultValue="년"
             value={birthYear}
             onChange={onChangeBirthYear}
+            isValid={!!birthYear}
           />
         </div>
       </div>
       <div className="sign-up-modal-submit-button-wrapper">
         <Button type="submit">가입하기</Button>
       </div>
+      <p>
+        이미 에어비앤비 계정이 있나요?
+        <span
+          className="sign-up-modal-set-login"
+          role="presentation"
+          onClick={() => {}}
+        >
+          로그인
+        </span>
+      </p>
     </Container>
   );
 }
