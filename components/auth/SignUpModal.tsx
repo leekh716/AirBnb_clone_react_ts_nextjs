@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import CloseXIcon from "../../public/static/svg/modal/modal_colose_x_icon.svg";
 import MailIcon from "../../public/static/svg/auth/mail.svg";
 import PersonIcon from "../../public/static/svg/auth/person.svg";
@@ -11,6 +12,7 @@ import Selector from "../common/Selector";
 import { dayList, monthList, yearList } from "../../lib/staticData";
 import Button from "../common/Button";
 import { signUpAPI } from "../../lib/api/auth";
+import { userActions } from "../../store/user";
 
 const Container = styled.form`
   width: 568px;
@@ -81,6 +83,8 @@ function SignUpModal({ closeModal }: IProps) {
   const [birthDay, setBirthDay] = useState<string | undefined>();
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
 
+  const dispatch = useDispatch();
+
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -121,6 +125,7 @@ function SignUpModal({ closeModal }: IProps) {
       };
       const { data } = await signUpAPI(signUpBody);
 
+      dispatch(userActions.setLoggedUser(data));
       closeModal();
     } catch (e) {
       // eslint-disable-next-line no-console
