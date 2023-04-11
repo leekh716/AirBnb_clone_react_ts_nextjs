@@ -46,7 +46,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       ).toUTCString()}; httponly`
     );
 
-    return res.end();
+    const newUserWithoutPassword: Partial<Pick<StoredUserType, "password">> =
+      newUser;
+
+    delete newUserWithoutPassword.password;
+
+    res.statusCode = 200;
+    return res.send(newUser);
   }
   res.statusCode = 405;
 
