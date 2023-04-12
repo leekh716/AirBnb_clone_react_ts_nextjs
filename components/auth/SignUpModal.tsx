@@ -15,6 +15,7 @@ import { signUpAPI } from "../../lib/api/auth";
 import { userActions } from "../../store/user";
 import useValidateMode from "../../hooks/useValidateMode";
 import PasswordWarning from "./PasswordWarning";
+import { authActions } from "../../store/auth";
 
 const Container = styled.form`
   width: 568px;
@@ -179,6 +180,10 @@ function SignUpModal({ closeModal }: IProps) {
     setPasswordFocused(true);
   };
 
+  const onChangeToLoginModal = useCallback(() => {
+    dispatch(authActions.setAuthMode("login"));
+  }, [dispatch]);
+
   const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -214,6 +219,7 @@ function SignUpModal({ closeModal }: IProps) {
     return () => {
       setValidateMode(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -338,7 +344,7 @@ function SignUpModal({ closeModal }: IProps) {
         <span
           className="sign-up-modal-set-login"
           role="presentation"
-          onClick={() => {}}
+          onClick={onChangeToLoginModal}
         >
           로그인
         </span>
