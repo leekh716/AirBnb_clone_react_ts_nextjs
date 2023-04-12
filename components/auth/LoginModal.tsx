@@ -9,6 +9,8 @@ import Input from "../common/Input";
 import palette from "../../styles/palette";
 import Button from "../common/Button";
 import { authActions } from "../../store/auth";
+import { loginAPI } from "../../lib/api/auth";
+import { userActions } from "../../store/user";
 
 const Container = styled.form`
   width: 568px;
@@ -75,8 +77,29 @@ export default function LoginModal({ closeModal }: IProps) {
     dispatch(authActions.setAuthMode("signUp"));
   }, [dispatch]);
 
+  const onSubmitLogin = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (!email || !password) {
+        alert("이메일과 비밀번호를 모두 입력해주세요.");
+      } else {
+        const loginBody = { email, password };
+
+        try {
+          const { data } = await loginAPI(loginBody);
+          dispatch(userActions.setLoggedUser(data));
+          closeModal();
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        }
+      }
+    },
+    [closeModal, dispatch, email, password]
+  );
+
   return (
-    <Container>
+    <Container onSubmit={onSubmitLogin}>
       <CloseXIcon className="modal-close-x-icon" onClick={closeModal} />
       <div className="login-input-wrapper">
         <Input

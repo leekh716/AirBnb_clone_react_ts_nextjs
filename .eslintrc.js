@@ -64,6 +64,7 @@ module.exports = {
     "react/require-default-props": "off",
     "consistent-return": "off",
     "react-hooks/exhaustive-deps": "warn",
+    "no-alert": "off",
   },
   settings: {
     "import/resolver": {
