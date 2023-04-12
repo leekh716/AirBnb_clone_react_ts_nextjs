@@ -84,7 +84,8 @@ const Container = styled.div`
 
 function Header() {
   const { openModal, ModalPortal, closeModal } = useModal();
-  const { user } = useSelector((state) => state);
+  const user = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
 
   return (

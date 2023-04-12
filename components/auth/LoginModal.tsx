@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import CloseXIcon from "../../public/static/svg/modal/modal_colose_x_icon.svg";
@@ -11,6 +11,7 @@ import Button from "../common/Button";
 import { authActions } from "../../store/auth";
 import { loginAPI } from "../../lib/api/auth";
 import { userActions } from "../../store/user";
+import useValidateMode from "../../hooks/useValidateMode";
 
 const Container = styled.form`
   width: 568px;
@@ -56,6 +57,14 @@ export default function LoginModal({ closeModal }: IProps) {
   const [password, setPassword] = useState("");
   const [isPasswordHided, setIsPasswordHided] = useState(true);
   const dispatch = useDispatch();
+  const { setValidateMode } = useValidateMode();
+
+  const validateLoginForm = useCallback(() => {
+    if (!email || !password) {
+      return false;
+    }
+    return true;
+  }, [email, password]);
 
   const onChangeEmail = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,9 +89,10 @@ export default function LoginModal({ closeModal }: IProps) {
   const onSubmitLogin = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      if (!email || !password) {
-        alert("이메일과 비밀번호를 모두 입력해주세요.");
-      } else {
+
+      setValidateMode(true);
+
+      if (validateLoginForm()) {
         const loginBody = { email, password };
 
         try {
@@ -95,8 +105,15 @@ export default function LoginModal({ closeModal }: IProps) {
         }
       }
     },
-    [closeModal, dispatch, email, password]
+    [closeModal, dispatch, email, password, setValidateMode, validateLoginForm]
   );
+
+  useEffect(() => {
+    return () => {
+      setValidateMode(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container onSubmit={onSubmitLogin}>
@@ -109,6 +126,9 @@ export default function LoginModal({ closeModal }: IProps) {
           name="email"
           value={email}
           onChange={onChangeEmail}
+          useValidation
+          isValid={email !== ""}
+          errorMessage="이메일을 입력해주세요."
         />
       </div>
       <div className="login-input-wrapper login-password-input-wrapper">
@@ -124,7 +144,10 @@ export default function LoginModal({ closeModal }: IProps) {
           }
           name="password"
           value={password}
+          useValidation
           onChange={onChangePassword}
+          isValid={password !== ""}
+          errorMessage="비밀번호를 입력해주세요."
         />
       </div>
       <div className="login-modal-submit-button-wrapper">
