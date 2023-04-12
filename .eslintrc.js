@@ -17,7 +17,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint"],
+  plugins: ["react", "@typescript-eslint", "react-hooks"],
   rules: {
     quotes: ["error", "double"], //더블 쿼터 사용
     "@typescript-eslint/quotes": ["error", "double"], //더블 쿼터 사용
@@ -63,6 +63,7 @@ module.exports = {
     ],
     "react/require-default-props": "off",
     "consistent-return": "off",
+    "react-hooks/exhaustive-deps": "warn",
   },
   settings: {
     "import/resolver": {
